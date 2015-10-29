@@ -1,7 +1,16 @@
 module Main where
+import Text.ParserCombinators.Parsec
 import System.Environment
+
+symbol :: Parser Char
+symbol = oneOf "!#$%&|*+-/:<=>?@^_~"
+
+readExpr :: String -> String
+readExpr input = case parse symbol "lisp" input of
+  Left err -> "No match: " ++ show err
+  Right val -> "Found value"
 
 main :: IO ()
 main = do
-  args <- getArgs
-  putStrLn ("Hello, " ++ args !! 0)
+  (expr:_) <- getArgs
+  putStrLn (readExpr expr)
